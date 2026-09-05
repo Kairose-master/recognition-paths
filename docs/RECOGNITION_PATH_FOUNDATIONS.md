@@ -220,6 +220,48 @@ prediction. The permutation experiments test the third, and a measured failure
 of any of them refutes \(\equiv_{\mathsf L}\subseteq\approx_\rho\) on the
 tested contexts.
 
+## 5c. When a finite test family identifies the congruence
+
+`RecognitionPaths/Identification.lean` answers the finite-versus-full question
+at the set level. For a family of tests `T` (continuation-query pairs), write
+\(\equiv_{\rho,T}\) for agreement on `T` (`RightEquivOn`). Say `T` is *direct*
+when it contains every `([], q)`, and *closed* for \(\rho\) when
+
+\[
+u\equiv_{\rho,T}v
+\;\Longrightarrow\;
+ua\equiv_{\rho,T}va
+\qquad\text{for every symbol }a
+\]
+
+(`Closed`; this is Angluin's consistency condition for an observation table).
+
+**Identification theorem** (`rightEquiv_of_closed`, `closed_of_identifies`).
+For a direct family `T`,
+
+\[
+\equiv_{\rho,T}\;=\;\equiv_\rho
+\qquad\Longleftrightarrow\qquad
+T\text{ is closed for }\rho .
+\]
+
+The criterion is constructive. If `T` is not closed, `refine_witness`
+produces a pair \(u\equiv_{\rho,T}v\) and a test \((a z, q)\) with
+\((z,q)\in T\) that separates them: the next column to add. For the
+length-bounded families \(T_k=\{(z,q):|z|\le k\}\), one more level of
+continuation is exactly one more symbol of prefix
+(`boundedEquiv_succ_iff`), so as soon as \(T_k\) and \(T_{k+1}\) induce the
+same relation, \(T_k\) is closed and identifies \(\equiv_\rho\)
+(`rightEquiv_of_stable`). The two-sided statements for \(\approx_\rho\), with
+closure under a symbol on either side, are `contextEquiv_of_closed₂` and
+`closed₂_of_identifies`.
+
+Two things are deliberately not claimed. The classical counting bound, that
+\(n\) Nerode classes force stabilisation by \(k=n-1\), is standard but not
+formalised (OPEN: it needs a pigeonhole argument). The \(\mathbb R\)-linear
+refinement, in which the numerical rank of the Hankel table replaces the count
+of classes, is the Fliess theory and is also not formalised.
+
 ## 6. From exact equality to distance (not formalized)
 
 Real logits are never exactly equal, so the practical object is the
@@ -252,7 +294,10 @@ H_\rho(u,t)=\rho(u,t),\qquad t=(z,q),
 \]
 
 with prefix traces as rows and continuation-query tests as columns, replicated
-under presentation controls. Its structure is fixed in the
+under presentation controls. Its rows are the states of Section 5a restricted
+to `T`, and Section 5c says exactly what the table can conclude: rows that
+agree on `T` are \(\equiv_\rho\)-identical precisely when `T` is closed, and
+a closure failure names the column that refines the table. Its structure is fixed in the
 `proof-path-invariance` repository (`docs/PHASE3_HANKEL_DESIGN.md`).
 
 ## 8. What comes after, and only after

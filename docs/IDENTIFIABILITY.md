@@ -99,3 +99,20 @@ It proves three facts.
 Thus the collapse is invariant under this elementary observational gauge.
 This is the exact sense in which the observations, rather than a selected
 latent box, determine the state object.
+
+## Finite tests: the set-level answer
+
+`Recognition.lean`, `Nerode.lean`, and `Identification.lean` settle the
+finite-versus-full question at the level of exact equality. For a recognizer
+\(\rho\) on traces, the identifiable state object is the Nerode quotient
+\(\Sigma^\ast/{\equiv_\rho}\), which is the extensional collapse of the
+prefix realization. A finite family of tests `T` containing the direct
+queries induces the same identity as the full contextual family exactly when
+`T` is closed under one-symbol extension; when it is not, a concrete
+separating test one symbol longer exists. So "black box" has a precise
+boundary: experiments identify the state object as soon as their test family
+is closed, and a closure failure is the instruction for the next experiment.
+
+Still open: the counting bound relating the number of Nerode classes to the
+required continuation length, and the quantitative version in which exact
+equality is replaced by a tolerance on \(\mathbb R^2\).

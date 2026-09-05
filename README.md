@@ -51,7 +51,12 @@ falsifiable equational consequences.
 `RecognitionPaths/Nerode.lean` proves that the right-context quotient
 `Σ*/≡_ρ` is the extensional collapse of the prefix realization of `ρ`, so
 the identifiable state object of the obstruction below is the Nerode
-quotient, and `B` acts on it as its transition monoid. See
+quotient, and `B` acts on it as its transition monoid.
+
+`RecognitionPaths/Identification.lean` gives the finite-test criterion: a test
+family containing the direct queries induces exactly `≡_ρ` if and only if the
+identity it induces is closed under appending one symbol, and a closure
+failure yields the separating test to add next. See
 `docs/RECOGNITION_PATH_FOUNDATIONS.md`.
 
 ## Research layers

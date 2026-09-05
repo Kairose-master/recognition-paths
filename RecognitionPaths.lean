@@ -5,3 +5,4 @@ import RecognitionPaths.ExtensionalCollapse
 import RecognitionPaths.Horn
 import RecognitionPaths.Recognition
 import RecognitionPaths.Nerode
+import RecognitionPaths.Identification
