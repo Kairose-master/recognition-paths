@@ -51,6 +51,13 @@ This makes the next objective precise: construct the observation-generated
 extensional collapse, and determine the intervention-completeness assumptions
 under which a minimal realization is unique. See `docs/IDENTIFIABILITY.md`.
 
+`RecognitionPaths/ExtensionalCollapse.lean` completes the first half: it
+constructs the quotient by equality of complete test profiles, proves its
+extensionality and universal factorization property, and proves that silent
+extensions have equivalent collapses. The remaining problem is whether a
+finite experimental test family determines the same collapse as the full
+contextual family.
+
 ## Status
 
 This repository contains foundations and conjectures for an active research
