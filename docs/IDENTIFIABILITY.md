@@ -76,3 +76,26 @@ algebraic theory whose free construction is empirically invariant. Different
 silent extensions may carry inequivalent monadic or path structure while
 having the same observations, so raw black-box data cannot select one without
 an identifiability theorem.
+
+## Constructed invariant
+
+`ExtensionalCollapse.lean` now constructs the first object that survives this
+obstruction:
+
+\[
+\operatorname{Ext}(e)=H/{\sim_e}.
+\]
+
+It proves three facts.
+
+1. The induced realization is extensional: its tests separate its states.
+2. Every map constant on observational classes factors uniquely through it.
+3. A silent extension has an equivalent collapse:
+
+   \[
+   \operatorname{Ext}(\widetilde e)\simeq\operatorname{Ext}(e).
+   \]
+
+Thus the collapse is invariant under this elementary observational gauge.
+This is the exact sense in which the observations, rather than a selected
+latent box, determine the state object.
