@@ -5,7 +5,7 @@ universe u
 /-- `R.Refines S` means that every `R`-identification is also an
     `S`-identification. -/
 def Refines {X : Type u} (R S : Setoid X) : Prop :=
-  ∀ ⦃x y : X⦄, R.Rel x y → S.Rel x y
+  ∀ ⦃x y : X⦄, R.r x y → S.r x y
 
 /-- The canonical map between quotients induced by refinement. -/
 def quotientMap {X : Type u} (R S : Setoid X) (h : Refines R S) :
@@ -47,14 +47,15 @@ theorem refinement_of_factor {X : Type u} (R S : Setoid X)
     existence of the canonical representative-preserving quotient map. -/
 theorem recognition_factorization_iff {X : Type u} (R S : Setoid X) :
     Refines R S ↔
-      ∃! f : Quotient R → Quotient S,
-        ∀ x, f (Quotient.mk R x) = Quotient.mk S x := by
+      ∃ f : Quotient R → Quotient S,
+        (∀ x, f (Quotient.mk R x) = Quotient.mk S x) ∧
+        ∀ g : Quotient R → Quotient S,
+          (∀ x, g (Quotient.mk R x) = Quotient.mk S x) → g = f := by
   constructor
   · intro h
-    refine ⟨quotientMap R S h, ?_, ?_⟩
-    · exact quotientMap_mk R S h
-    · intro f hf
-      exact quotientMap_unique R S h f hf
+    refine ⟨quotientMap R S h, quotientMap_mk R S h, ?_⟩
+    intro f hf
+    exact quotientMap_unique R S h f hf
   · rintro ⟨f, hf, _⟩
     exact refinement_of_factor R S f hf
 
