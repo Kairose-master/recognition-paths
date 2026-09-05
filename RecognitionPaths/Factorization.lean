@@ -1,3 +1,5 @@
+import RecognitionPaths.Equiv
+
 namespace RecognitionPaths
 
 universe u
@@ -58,5 +60,31 @@ theorem recognition_factorization_iff {X : Type u} (R S : Setoid X) :
     exact quotientMap_unique R S h f hf
   · rintro ⟨f, hf, _⟩
     exact refinement_of_factor R S f hf
+
+/-- Mutual refinement identifies the two quotients: the canonical maps in the
+    two directions are inverse to each other. -/
+def quotientEquiv {X : Type u} (R S : Setoid X) (h₁ : Refines R S) (h₂ : Refines S R) :
+    Quotient R ≃ Quotient S where
+  toFun := quotientMap R S h₁
+  invFun := quotientMap S R h₂
+  left_inv := by
+    intro q
+    refine Quotient.inductionOn q ?_
+    intro x
+    rfl
+  right_inv := by
+    intro q
+    refine Quotient.inductionOn q ?_
+    intro x
+    rfl
+
+/-- Refinement in both directions holds exactly when the two setoids agree. -/
+theorem refines_both_iff {X : Type u} (R S : Setoid X) :
+    (Refines R S ∧ Refines S R) ↔ ∀ x y, R.r x y ↔ S.r x y := by
+  constructor
+  · rintro ⟨h₁, h₂⟩ x y
+    exact ⟨fun h => h₁ h, fun h => h₂ h⟩
+  · intro h
+    exact ⟨fun _ _ hxy => (h _ _).mp hxy, fun _ _ hxy => (h _ _).mpr hxy⟩
 
 end RecognitionPaths

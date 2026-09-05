@@ -1,3 +1,6 @@
+import RecognitionPaths.Equiv
 import RecognitionPaths.Factorization
 import RecognitionPaths.ObservationalNonidentifiability
 import RecognitionPaths.ExtensionalCollapse
+import RecognitionPaths.Horn
+import RecognitionPaths.Recognition

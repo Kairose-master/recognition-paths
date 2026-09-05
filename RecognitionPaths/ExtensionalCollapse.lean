@@ -1,4 +1,5 @@
 import RecognitionPaths.ObservationalNonidentifiability
+import RecognitionPaths.Equiv
 
 namespace RecognitionPaths
 
@@ -43,11 +44,9 @@ theorem collapseProfile_mk {Test : Type v} {Output : Type w}
 theorem extensionalCollapse_is_extensional {Test : Type v} {Output : Type w}
     (A : ObservationSystem.{u, v, w} Test Output) :
     A.extensionalCollapse.Extensional := by
-  intro q₁ q₂ h
-  refine Quotient.inductionOn q₁ ?_
-  intro s₁
-  refine Quotient.inductionOn q₂ ?_
-  intro s₂
+  intro q₁ q₂
+  refine Quotient.inductionOn₂ q₁ q₂ ?_
+  intro s₁ s₂ h
   exact Quotient.sound h
 
 /-- Any state map constant on observational classes factors through the

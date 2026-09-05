@@ -30,6 +30,22 @@ This condition holds exactly when the canonical assignment
 is well-defined. `RecognitionPaths/Factorization.lean` formalizes this result
 and its uniqueness.
 
+## The fixed small world
+
+`RecognitionPaths/Horn.lean` fixes a small Horn language `Σ`, ordered premise
+traces `Σ*`, queries, semantic entailment, and theory-level logical identity
+`u ≡_L v` (the same consequences for every query). It proves that
+permutations are logically identical and that `≡_L` is a congruence, so the
+logical meaning space `L = Σ*/≡_L` is a monoid.
+
+`RecognitionPaths/Recognition.lean` defines a recognizer `ρ : Σ* × Q → O`,
+right-context identity `u ≡_ρ v`, two-sided identity `u ≈_ρ v`, and the
+behavioral meaning space `B = Σ*/≈_ρ`, which is again a monoid. The
+Recognition Factorization Theorem is then instantiated: `≡_L ⊆ ≈_ρ` holds
+exactly when a unique representative-preserving map `F : L → B` exists, and
+that map is a monoid morphism. The reverse inclusion gives `G : B → L`, and
+both together give `L ≃ B`. See `docs/RECOGNITION_PATH_FOUNDATIONS.md`.
+
 ## Research layers
 
 1. Exact contextual equivalence and quotient factorization.

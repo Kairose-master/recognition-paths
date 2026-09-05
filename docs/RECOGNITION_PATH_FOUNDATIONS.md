@@ -1,0 +1,223 @@
+# Recognition path foundations: one small world, three definitions, one theorem
+
+This note fixes a single small mathematical world and states, inside it, what
+"logically identical" and "recognized as identical" mean. Everything below is
+machine-checked in `RecognitionPaths/Horn.lean`,
+`RecognitionPaths/Recognition.lean`, and `RecognitionPaths/Factorization.lean`
+unless marked otherwise. No monad is chosen and no model is run.
+
+## 1. The common input language
+
+The signature is a small Horn logic over a type of atoms:
+
+\[
+\Sigma=\{A\to B,\; A\land B\to C,\; A\to B\land C,\dots\}.
+\]
+
+In Lean a clause is `HornClause Atom` with a `body` and a `head`, both lists of
+atoms. An ordered premise trace is a word
+
+\[
+w=p_1p_2\cdots p_n\in\Sigma^\ast,
+\]
+
+represented as `Trace Atom := List (HornClause Atom)`.
+
+A query `q : Query Atom` is a pair of hypothesis atoms and a goal atom, read
+"do the hypotheses together with the theory force the goal?"
+
+The observation space `O` is left abstract. The intended instance is
+\(O=\mathbb R^2\), carrying both the YES and the NO logit, so no information
+is discarded by taking a margin. A recognizer is
+
+\[
+\rho:\Sigma^\ast\times Q\to O,
+\]
+
+`Recognizer Sym Q O` with a single field `observe`.
+
+## 2. Logical identity
+
+Write \(\Gamma(w)\) for the Horn theory of `w` with order forgotten
+(`Horn.theory`: the set of clauses occurring in `w`). Entailment is semantic:
+every valuation that models \(\Gamma\) and makes the hypotheses true makes the
+goal true (`Horn.Entails`).
+
+\[
+\boxed{
+u\equiv_{\mathsf L}v
+\iff
+\forall q\in Q,\quad
+\operatorname{Entails}(\Gamma(u),q)
+\iff
+\operatorname{Entails}(\Gamma(v),q)
+}
+\]
+
+This is theory-level identity, not agreement on the one query used in an
+experiment. The logical meaning space is
+
+\[
+\boxed{L=\Sigma^\ast/{\equiv_{\mathsf L}}}
+\qquad
+\text{(`Horn.LogicalSpace`)}.
+\]
+
+Two facts are proved about it.
+
+- **Permutation invariance** (`Horn.logicalEquiv_of_perm`): if `u` is a
+  permutation of `v`, then \(u\equiv_{\mathsf L}v\). This is the formal content
+  of "same formal problem" behind every premise-order experiment.
+- **Congruence** (`Horn.logicalEquiv_congr`): \(u\equiv_{\mathsf L}v\) implies
+  \(xuz\equiv_{\mathsf L}xvz\). The proof goes through the observation that
+  theories with the same consequences have the same models, because every
+  clause is one of its own consequences. Consequently `L` is a monoid
+  (`Horn.LogicalSpace.mul`).
+
+## 3. Recognition identity
+
+Right-context behavioral identity:
+
+\[
+\boxed{
+u\equiv_\rho v
+\iff
+\forall z\in\Sigma^\ast,\;\forall q\in Q,\quad
+\rho(uz,q)=\rho(vz,q)
+}
+\qquad
+\text{(`Recognizer.RightEquiv`)}.
+\]
+
+Two-sided behavioral identity, which also covers replacement in the middle
+of a trace:
+
+\[
+\boxed{
+u\approx_\rho v
+\iff
+\forall x,z\in\Sigma^\ast,\;\forall q\in Q,\quad
+\rho(xuz,q)=\rho(xvz,q)
+}
+\qquad
+\text{(`Recognizer.ContextEquiv`)}.
+\]
+
+The behavioral meaning space is
+
+\[
+\boxed{B=\Sigma^\ast/{\approx_\rho}}
+\qquad
+\text{(`Recognizer.Behavior`)}.
+\]
+
+`B` is built from external behavior alone; it never names an internal state.
+Because \(\approx_\rho\) is a two-sided congruence
+(`Recognizer.contextEquiv_append`), concatenation descends to `B` and the
+monoid laws hold (`Behavior.mul_assoc`, `Behavior.one_mul`,
+`Behavior.mul_one`).
+
+Experiments only observe a finite family of contexts. The restricted relation
+\(\approx_{\rho,T}\) (`Recognizer.ContextEquivOn`) is coarser than
+\(\approx_\rho\) (`contextEquivOn_of_contextEquiv`) and gets finer as `T`
+grows (`contextEquivOn_mono`). Whether some finite `T` recovers
+\(\approx_\rho\) is the open identifiability question of
+`docs/IDENTIFIABILITY.md`.
+
+## 4. Recognition Factorization Theorem
+
+**Theorem** (`Horn.recognition_factorization`). The following are equivalent.
+
+\[
+\boxed{\equiv_{\mathsf L}\subseteq\approx_\rho}
+\qquad\Longleftrightarrow\qquad
+\boxed{
+\exists!\,F:L\to B
+\quad\text{such that}\quad
+F([w]_{\mathsf L})=[w]_\rho .
+}
+\]
+
+*Proof.* Forward: if \([w]_{\mathsf L}=[v]_{\mathsf L}\) then
+\(w\equiv_{\mathsf L}v\), hence \(w\approx_\rho v\), hence
+\([w]_\rho=[v]_\rho\); so the assignment is independent of the representative.
+Backward: if such an `F` exists and \(w\equiv_{\mathsf L}v\), then
+\([w]_\rho=F([w]_{\mathsf L})=F([v]_{\mathsf L})=[v]_\rho\), so
+\(w\approx_\rho v\). Uniqueness follows because the projection
+\(\Sigma^\ast\to L\) is surjective. In Lean the statement is the instance of
+the setoid-level `recognition_factorization_iff` at the two setoids
+`logicalSetoid Atom` and `ρ.contextSetoid`. ∎
+
+The map `F` is `Horn.recognitionMap`. It is a monoid morphism
+(`Horn.recognitionMap_mul`): the canonical recognition path respects
+concatenation.
+
+The theorem says precisely that
+
+> the model recognizes logically identical inputs as identical
+
+is the same statement as
+
+> there is a canonical path from the logical meaning space to the behavioral
+> meaning space.
+
+## 5. Direction matters
+
+| Inclusion | Map | Meaning | Lean |
+|---|---|---|---|
+| \(\equiv_{\mathsf L}\subseteq\approx_\rho\) | \(F:L\to B\) | logically identical inputs are recognized as identical | `LogicallyInvariant`, `recognition_factorization` |
+| \(\approx_\rho\subseteq\equiv_{\mathsf L}\) | \(G:B\to L\) | logical meaning is recoverable from behavior | `LogicallyRecoverable`, `recognition_recovery` |
+| both | \(L\cong B\) | the two meaning spaces coincide | `recognitionEquiv` |
+
+The permutation experiments so far probe the first inclusion on a finite
+restriction and suggest that it may fail. The second inclusion has not been
+tested at all.
+
+## 6. From exact equality to distance (not formalized)
+
+Real logits are never exactly equal, so the practical object is the
+behavioral distance
+
+\[
+d_\rho(u,v)=\sup_{x,z,q}d_O\bigl(\rho(xuz,q),\rho(xvz,q)\bigr),
+\]
+
+estimated on a finite test family `T` by
+\(\widehat d_{\rho,T}(u,v)=\max_{(x,z,q)\in T}d_O(\cdot,\cdot)\). Restricting
+to logically identical pairs gives the invariance defect
+
+\[
+\Delta_{\mathrm{inv}}(T)=\sup_{u\equiv_{\mathsf L}v}\widehat d_{\rho,T}(u,v),
+\]
+
+which is the correct generalization of the earlier "permutation effect". The
+exact relations above are the \(\Delta_{\mathrm{inv}}=0\) case. The
+quantitative (Lawvere-enriched) version is a later layer and is not formalized
+here.
+
+## 7. The observation the theorem asks for
+
+The theorem compares two quotients of the same free monoid, so the experiment
+that serves it is a rectangular observation table
+
+\[
+H_\rho(u,t)=\rho(u,t),\qquad t=(z,q),
+\]
+
+with prefix traces as rows and continuation-query tests as columns, replicated
+under presentation controls. Its structure is fixed in the
+`proof-path-invariance` repository (`docs/PHASE3_HANKEL_DESIGN.md`).
+
+## 8. What comes after, and only after
+
+Once a behavioral congruence is observed, `B` is a monoid and the operations
+and equations actually found in the data present an algebraic theory
+\(\mathbb T_\rho\). Its free/forgetful adjunction \(F_\rho\dashv U_\rho\)
+yields the monad candidate \(T_\rho=U_\rho F_\rho\). The order is
+
+\[
+\text{observation}\to\text{equivalence}\to\text{quotient}\to
+\text{operations and equations}\to\text{algebraic theory}\to\text{monad}.
+\]
+
+None of the later steps is taken in this repository yet.
