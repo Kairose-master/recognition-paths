@@ -39,6 +39,18 @@ and its uniqueness.
 5. Algebraic operations and equations induced by observation; monads are
    reconstructed only after this theory is identified.
 
+## First obstruction
+
+`RecognitionPaths/ObservationalNonidentifiability.lean` proves the elementary
+silent-extension obstruction. Any inhabited realization can be replaced by a
+realization with an extra hidden Boolean coordinate while preserving every
+specified observation. The extension is non-extensional, so observations do
+not determine a unique raw state space or path structure.
+
+This makes the next objective precise: construct the observation-generated
+extensional collapse, and determine the intervention-completeness assumptions
+under which a minimal realization is unique. See `docs/IDENTIFIABILITY.md`.
+
 ## Status
 
 This repository contains foundations and conjectures for an active research
