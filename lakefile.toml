@@ -1,0 +1,6 @@
+name = "recognition-paths"
+version = "0.1.0"
+defaultTargets = ["RecognitionPaths"]
+
+[[lean_lib]]
+name = "RecognitionPaths"
