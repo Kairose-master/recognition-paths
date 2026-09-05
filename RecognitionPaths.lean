@@ -1,2 +1,3 @@
 import RecognitionPaths.Factorization
 import RecognitionPaths.ObservationalNonidentifiability
+import RecognitionPaths.ExtensionalCollapse
