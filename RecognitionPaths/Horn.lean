@@ -90,6 +90,25 @@ theorem logicalEquiv_of_perm {u w : Trace Atom} (p : List.Perm u w) :
   · intro h v hv hh
     exact h v (models_of_perm p hv) hh
 
+/-- Concatenation of traces is logically commutative. -/
+theorem logicalEquiv_comm (u w : Trace Atom) : LogicalEquiv (u ++ w) (w ++ u) :=
+  logicalEquiv_of_perm List.perm_append_comm
+
+theorem models_of_dup {v : Valuation Atom} {w : Trace Atom}
+    (h : Models v (theory w)) : Models v (theory (w ++ w)) :=
+  fun c hc => h c (by
+    rcases List.mem_append.mp hc with hc | hc <;> exact hc)
+
+/-- Repeating a trace adds no logical content: concatenation is logically
+    idempotent. -/
+theorem logicalEquiv_dup (w : Trace Atom) : LogicalEquiv (w ++ w) w := by
+  intro q
+  constructor
+  · intro h v hv hh
+    exact h v (models_of_dup hv) hh
+  · intro h v hv hh
+    exact h v (fun c hc => hv c (List.mem_append_left _ hc)) hh
+
 /-! ### Logical identity is a congruence for concatenation
 
 Two traces with the same consequences have the same models: each clause of

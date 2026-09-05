@@ -173,6 +173,53 @@ The permutation experiments so far probe the first inclusion on a finite
 restriction and suggest that it may fail. The second inclusion has not been
 tested at all.
 
+## 5a. The Nerode quotient is the identifiable state object
+
+`RecognitionPaths/Nerode.lean` joins the two halves of the library. The
+recognizer has a raw *prefix realization*: states are prefix traces, tests are
+continuation-query pairs, and observing `u` at `(z, q)` means \(\rho(uz,q)\).
+Its observation-generated extensional collapse (`ExtensionalCollapse.lean`) is
+exactly the right-context quotient:
+
+\[
+\operatorname{Ext}(\text{prefix realization of }\rho)\;\simeq\;\Sigma^\ast/{\equiv_\rho}
+\qquad\text{(`nerodeEquivCollapse`)}.
+\]
+
+So the object that survives the silent-extension obstruction of
+`docs/IDENTIFIABILITY.md` is the Nerode quotient, and its tests separate its
+states (`prefixSystem_collapse_extensional`).
+
+The behavioral monoid acts on it by right concatenation,
+\([w]\cdot[u]=[wu]\) (`Nerode.act`), the action respects products and the
+unit (`Nerode.act_mul`, `Nerode.act_one`), and every state is reached from the
+class of the empty trace (`Nerode.reach`). In automata language:
+\(\Sigma^\ast/{\equiv_\rho}\) is the minimal state space and
+\(B=\Sigma^\ast/{\approx_\rho}\) is its transition monoid. The Hankel table
+of Section 7 has these states as rows.
+
+## 5b. Invariance forces equations on behavior
+
+Because \(\Gamma\) forgets order and repetition, the logical monoid is
+commutative and idempotent (`LogicalSpace.mul_comm`, `LogicalSpace.mul_idem`,
+from `logicalEquiv_comm` and `logicalEquiv_dup`). Hence whenever the canonical
+path `F` exists, its image satisfies the same equations
+(`recognitionMap_comm`, `recognitionMap_idem`), and at the level of traces:
+
+\[
+\equiv_{\mathsf L}\subseteq\approx_\rho
+\;\Longrightarrow\;
+uv\approx_\rho vu,\qquad ww\approx_\rho w,\qquad
+u\approx_\rho \sigma(u)\ \text{for every permutation }\sigma .
+\]
+
+(`contextEquiv_comm_of_invariant`, `contextEquiv_dup_of_invariant`,
+`contextEquiv_of_perm_of_invariant`.) These are not hypotheses about the model;
+they are consequences of the single inclusion, and each is a falsifiable
+prediction. The permutation experiments test the third, and a measured failure
+of any of them refutes \(\equiv_{\mathsf L}\subseteq\approx_\rho\) on the
+tested contexts.
+
 ## 6. From exact equality to distance (not formalized)
 
 Real logits are never exactly equal, so the practical object is the
@@ -210,8 +257,9 @@ under presentation controls. Its structure is fixed in the
 
 ## 8. What comes after, and only after
 
-Once a behavioral congruence is observed, `B` is a monoid and the operations
-and equations actually found in the data present an algebraic theory
+Once a behavioral congruence is observed, `B` is a monoid acting on the Nerode
+states, and the operations and equations actually found in the data present
+an algebraic theory
 \(\mathbb T_\rho\). Its free/forgetful adjunction \(F_\rho\dashv U_\rho\)
 yields the monad candidate \(T_\rho=U_\rho F_\rho\). The order is
 

@@ -44,7 +44,15 @@ behavioral meaning space `B = Σ*/≈_ρ`, which is again a monoid. The
 Recognition Factorization Theorem is then instantiated: `≡_L ⊆ ≈_ρ` holds
 exactly when a unique representative-preserving map `F : L → B` exists, and
 that map is a monoid morphism. The reverse inclusion gives `G : B → L`, and
-both together give `L ≃ B`. See `docs/RECOGNITION_PATH_FOUNDATIONS.md`.
+both together give `L ≃ B`. Since `L` is commutative and idempotent, the
+inclusion `≡_L ⊆ ≈_ρ` forces `uv ≈_ρ vu` and `ww ≈_ρ w`: invariance has
+falsifiable equational consequences.
+
+`RecognitionPaths/Nerode.lean` proves that the right-context quotient
+`Σ*/≡_ρ` is the extensional collapse of the prefix realization of `ρ`, so
+the identifiable state object of the obstruction below is the Nerode
+quotient, and `B` acts on it as its transition monoid. See
+`docs/RECOGNITION_PATH_FOUNDATIONS.md`.
 
 ## Research layers
 

@@ -4,3 +4,4 @@ import RecognitionPaths.ObservationalNonidentifiability
 import RecognitionPaths.ExtensionalCollapse
 import RecognitionPaths.Horn
 import RecognitionPaths.Recognition
+import RecognitionPaths.Nerode

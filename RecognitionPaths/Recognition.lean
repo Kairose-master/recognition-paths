@@ -145,6 +145,20 @@ theorem LogicalSpace.mul_mk (u v : Trace Atom) :
       Quotient.mk (logicalSetoid Atom) (u ++ v) :=
   rfl
 
+/-- The logical monoid is commutative: order of premises is forgotten. -/
+theorem LogicalSpace.mul_comm (a b : LogicalSpace Atom) :
+    LogicalSpace.mul a b = LogicalSpace.mul b a := by
+  refine Quotient.inductionOn₂ a b ?_
+  intro u v
+  exact Quotient.sound (logicalEquiv_comm u v)
+
+/-- The logical monoid is idempotent: repetition of premises is forgotten. -/
+theorem LogicalSpace.mul_idem (a : LogicalSpace Atom) :
+    LogicalSpace.mul a a = a := by
+  refine Quotient.inductionOn a ?_
+  intro u
+  exact Quotient.sound (logicalEquiv_dup u)
+
 /-- `≡_L ⊆ ≈_ρ`: the recognizer identifies logically identical traces. -/
 def LogicallyInvariant (ρ : Recognizer (HornClause Atom) (Query Atom) O) : Prop :=
   Refines (logicalSetoid Atom) ρ.contextSetoid
@@ -187,6 +201,47 @@ theorem recognitionMap_mul (ρ : Recognizer (HornClause Atom) (Query Atom) O)
   refine Quotient.inductionOn₂ a b ?_
   intro u v
   rfl
+
+/-! ### Invariance forces equations on behavior
+
+`L` is a commutative idempotent monoid, so if the canonical path `F : L → B`
+exists, its image satisfies the same equations.  Stated at the level of
+traces, these are falsifiable predictions about the recognizer. -/
+
+/-- Under invariance, swapping two blocks of premises is behaviorally
+    invisible in every context. -/
+theorem contextEquiv_comm_of_invariant (ρ : Recognizer (HornClause Atom) (Query Atom) O)
+    (h : LogicallyInvariant ρ) (u v : Trace Atom) :
+    ρ.ContextEquiv (u ++ v) (v ++ u) :=
+  h (logicalEquiv_comm u v)
+
+/-- Under invariance, repeating a block of premises is behaviorally invisible
+    in every context. -/
+theorem contextEquiv_dup_of_invariant (ρ : Recognizer (HornClause Atom) (Query Atom) O)
+    (h : LogicallyInvariant ρ) (w : Trace Atom) :
+    ρ.ContextEquiv (w ++ w) w :=
+  h (logicalEquiv_dup w)
+
+/-- Under invariance, any permutation of premises is behaviorally invisible in
+    every context: the formal content of the `S3` experiments. -/
+theorem contextEquiv_of_perm_of_invariant (ρ : Recognizer (HornClause Atom) (Query Atom) O)
+    (h : LogicallyInvariant ρ) {u v : Trace Atom} (p : List.Perm u v) :
+    ρ.ContextEquiv u v :=
+  h (logicalEquiv_of_perm p)
+
+/-- The image of the canonical path is a commutative submonoid of `B`. -/
+theorem recognitionMap_comm (ρ : Recognizer (HornClause Atom) (Query Atom) O)
+    (h : LogicallyInvariant ρ) (a b : LogicalSpace Atom) :
+    Recognizer.Behavior.mul ρ (recognitionMap ρ h a) (recognitionMap ρ h b) =
+      Recognizer.Behavior.mul ρ (recognitionMap ρ h b) (recognitionMap ρ h a) := by
+  rw [← recognitionMap_mul, ← recognitionMap_mul, LogicalSpace.mul_comm]
+
+/-- The image of the canonical path consists of idempotents of `B`. -/
+theorem recognitionMap_idem (ρ : Recognizer (HornClause Atom) (Query Atom) O)
+    (h : LogicallyInvariant ρ) (a : LogicalSpace Atom) :
+    Recognizer.Behavior.mul ρ (recognitionMap ρ h a) (recognitionMap ρ h a) =
+      recognitionMap ρ h a := by
+  rw [← recognitionMap_mul, LogicalSpace.mul_idem]
 
 /-- The reverse direction: logical identity is recoverable from behavior
     exactly when there is a unique representative-preserving `G : B → L`. -/
