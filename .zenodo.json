@@ -1,0 +1,13 @@
+{
+  "title": "Recognition Paths: a machine-checked framework for logical and behavioral identity of recognizers",
+  "description": "Lean 4 formalization (core only): logical and behavioral identity as congruences on a free monoid, the Recognition Factorization Theorem, equational consequences of invariance, the Nerode quotient as extensional collapse, the finite-test identification criterion, biextensional collapse, and specifications for constructed recognizers.",
+  "creators": [{"name": "Jang, Jinu", "affiliation": ""}],
+  "license": "MIT",
+  "upload_type": "software",
+  "keywords": ["Lean 4","formal verification","Myhill-Nerode","syntactic monoid","Chu spaces","logical invariance"],
+  "related_identifiers": [
+    {"identifier": "https://github.com/Kairose-master/recognition-paths", "relation": "isSupplementTo", "resource_type": "software"},
+    {"identifier": "https://github.com/Kairose-master/proof-path-invariance", "relation": "isSupplementTo", "resource_type": "software"},
+    {"identifier": "https://huggingface.co/datasets/jinu0633/hankel-tables", "relation": "isSupplementTo", "resource_type": "dataset"}
+  ]
+}

@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it."
+title: "Recognition Paths: a machine-checked framework for logical and behavioral identity of recognizers"
+authors:
+  - family-names: Jang
+    given-names: Jinu
+license: MIT
+repository-code: https://github.com/Kairose-master/recognition-paths
+version: 0.1.0
+date-released: 2026-09-06
