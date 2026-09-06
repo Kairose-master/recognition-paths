@@ -109,6 +109,44 @@ theorem logicalEquiv_dup (w : Trace Atom) : LogicalEquiv (w ++ w) w := by
   · intro h v hv hh
     exact h v (fun c hc => hv c (List.mem_append_left _ hc)) hh
 
+/-! ### Adding a derivable clause is logically invisible -/
+
+/-- A clause is *derivable* from a trace when each of its head atoms is a
+    consequence of its body. -/
+def Derivable (w : Trace Atom) (c : HornClause Atom) : Prop :=
+  ∀ a, a ∈ c.head → Entails (theory w) ⟨c.body, a⟩
+
+theorem satisfies_of_derivable {w : Trace Atom} {c : HornClause Atom}
+    (hd : Derivable w c) {v : Valuation Atom} (hv : Models v (theory w)) :
+    Satisfies v c :=
+  fun hb a ha => hd a ha v hv hb
+
+/-- Appending a derivable clause does not change the consequences: the
+    extended trace is logically identical to the original.  This certifies
+    the redundant-extension rows of `hankel_v3`. -/
+theorem logicalEquiv_append_derivable {w : Trace Atom} {c : HornClause Atom}
+    (hd : Derivable w c) : LogicalEquiv (w ++ [c]) w := by
+  intro q
+  constructor
+  · intro h v hv hh
+    refine h v ?_ hh
+    intro d hdm
+    rcases List.mem_append.mp hdm with hdm | hdm
+    · exact hv d hdm
+    · have : d = c := List.mem_singleton.mp hdm
+      subst this
+      exact satisfies_of_derivable hd hv
+  · intro h v hv hh
+    exact h v (fun d hdm => hv d (List.mem_append_left _ hdm)) hh
+
+/-- Two derivable extensions of one trace are logically identical to each
+    other: the length-matched semantic rewrite. -/
+theorem logicalEquiv_derivable_extensions {w : Trace Atom} {c c' : HornClause Atom}
+    (hc : Derivable w c) (hc' : Derivable w c') :
+    LogicalEquiv (w ++ [c]) (w ++ [c']) :=
+  logicalEquiv_trans (logicalEquiv_append_derivable hc)
+    (logicalEquiv_symm (logicalEquiv_append_derivable hc'))
+
 /-! ### Logical identity is a congruence for concatenation
 
 Two traces with the same consequences have the same models: each clause of
