@@ -262,6 +262,31 @@ formalised (OPEN: it needs a pigeonhole argument). The \(\mathbb R\)-linear
 refinement, in which the numerical rank of the Hankel table replaces the count
 of classes, is the Fliess theory and is also not formalised.
 
+## 5d. The observation table as a Chu space
+
+Under the broadest reading of "geometry", the geometry that cannot be
+removed from this project is the duality between points and tests: an
+object is known through the outcomes of the tests applied to it. An
+observation system \((S, T, e : S\times T\to O)\) is a Chu space, and a
+Hankel table is one with rows \(S\) and columns \(T\).
+
+`RecognitionPaths/Biextensional.lean` completes the collapse begun in
+`ExtensionalCollapse.lean`. Tests are quotiented by equality of their state
+profiles (`testSetoid`, `TestCollapse`), states by equality of their test
+profiles (`Collapse`), and the observation descends to both
+(`biextensionalCollapse`). In the result, tests separate states
+(`biextensionalCollapse_extensional`) and states separate tests
+(`biextensionalCollapse_coextensional`); collapsing the tests does not
+change which states are identified (`profile_eq_iff_biext`); and a silent
+extension has the same test collapse (`testCollapseSilentEquiv`).
+
+The counts "distinct rows" and "distinct columns" reported for the Boolean
+table in `proof-path-invariance` (Phase 3.2) are the sizes of these two
+quotients. Metric geometry (Section 6) is a further choice layered on this
+duality; the Boolean readout of Phase 3.2 removes that layer and keeps only
+the duality, which is why the Recognition Factorization Theorem can be
+checked there by exact equality.
+
 ## 6. From exact equality to distance (not formalized)
 
 Real logits are never exactly equal, so the practical object is the

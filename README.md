@@ -53,6 +53,11 @@ falsifiable equational consequences.
 the identifiable state object of the obstruction below is the Nerode
 quotient, and `B` acts on it as its transition monoid.
 
+`RecognitionPaths/Biextensional.lean` adds the column-side quotient: tests
+modulo equal state profiles. Together with the state collapse this is the
+biextensional collapse of the observation Chu space, in which tests
+separate states and states separate tests.
+
 `RecognitionPaths/Identification.lean` gives the finite-test criterion: a test
 family containing the direct queries induces exactly `≡_ρ` if and only if the
 identity it induces is closed under appending one symbol, and a closure

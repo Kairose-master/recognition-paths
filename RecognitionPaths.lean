@@ -6,3 +6,4 @@ import RecognitionPaths.Horn
 import RecognitionPaths.Recognition
 import RecognitionPaths.Nerode
 import RecognitionPaths.Identification
+import RecognitionPaths.Biextensional
