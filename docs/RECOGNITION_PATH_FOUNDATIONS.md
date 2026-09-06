@@ -304,6 +304,46 @@ specification exactly. The distance between the two specifications, the
 identification of consequence-equivalent clause sets, is what training
 must supply, and it is measured on the same tables as before.
 
+## 5f. The graded closure: budgets as grades
+
+`RecognitionPaths/Graded.lean` replaces the closure operator by its finite
+stages. One parallel round of forward chaining is `step`, and
+\(T_k S=\) `rounds Γ k S` is the set of atoms known after \(k\) rounds from
+\(S\). The family is an \(\mathbb N\)-graded monad on the poset of atom
+sets:
+
+* \(T_0=\mathrm{id}\) (`rounds_zero`) and \(T_j\circ T_k=T_{j+k}\)
+  (`rounds_add`, the composition law);
+* \(S\subseteq T_kS\subseteq T_{k+d}S\) (`rounds_extensive`, `rounds_le_add`),
+  monotone in \(S\) and in the theory (`rounds_mono`, `rounds_mono_theory`);
+* the limit \(T_\infty S=\bigcup_k T_kS\) is the least model containing
+  \(S\) (`limit_models`), so semantic entailment is entailment at some
+  finite grade (`entails_iff_exists_rounds`: soundness and completeness).
+
+Only \(T_\infty\) is idempotent. Budget-\(k\) identity
+\(u\approx_k w\) (`GradedEquiv k`) asks for the same answers within \(k\)
+rounds for every query. It is blind to order and repetition at every grade
+(`gradedEquiv_of_perm`, `gradedEquiv_dup`), identity at every grade implies
+\(\equiv_L\) (`logicalEquiv_of_gradedEquiv`), and the converse fails at
+any fixed grade: a trace and its extension by one clause are
+budget-\(k\) identical exactly when the extension brings no query inside
+the budget (`gradedEquiv_append_iff`, `not_gradedEquiv_append_iff`). For
+a derivable clause the separation is transient
+(`gradedEquiv_append_derivable_eventually`).
+
+The budgeted recognizer `roundsRecognizer Atom k` answers by \(k\) rounds;
+its behavioral identity is graded identity in every context
+(`roundsRecognizer_contextEquiv_iff`). The composition law read on the
+recognizer (`entailsK_presaturate`) says that pre-saturating the
+hypotheses by \(j\) rounds and reading with budget \(k\) equals reading
+with budget \(j+k\): a hint buys exactly its depth.
+
+This is the first place the theory names an algebraic object that a
+constructed recognizer realises and that predicts, rather than describes,
+which equal-meaning inputs it distinguishes. The RQ2 table of
+`proof-path-invariance` is the empirical instance of
+`not_gradedEquiv_append_iff`.
+
 ## 6. From exact equality to distance (not formalized)
 
 Real logits are never exactly equal, so the practical object is the
@@ -355,4 +395,7 @@ yields the monad candidate \(T_\rho=U_\rho F_\rho\). The order is
 \text{operations and equations}\to\text{algebraic theory}\to\text{monad}.
 \]
 
-None of the later steps is taken in this repository yet.
+Of the later steps, one is now taken: the graded closure of §5f is the
+monad candidate for budgeted recognizers, with its composition law as the
+first equation. Whether any recognizer that was not built from it
+satisfies that law is the empirical question that follows.
