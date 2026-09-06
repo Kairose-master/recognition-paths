@@ -1,5 +1,7 @@
 # Recognition Paths
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22495808.svg)](https://doi.org/10.5281/zenodo.22495808)
+
 Recognition Paths studies when formal identity can be transported into the
 observational identity of a recognizer.
 
@@ -104,4 +106,12 @@ Install Lean through `elan`, then run:
 
 ```bash
 lake build
+```
+
+## Citation
+
+Concept DOI (all versions): [10.5281/zenodo.22495808](https://doi.org/10.5281/zenodo.22495808). Version v0.1.1: [10.5281/zenodo.22495809](https://doi.org/10.5281/zenodo.22495809).
+
+```
+Jang, Jinu (2026). recognition-paths. Zenodo. https://doi.org/10.5281/zenodo.22495808
 ```
