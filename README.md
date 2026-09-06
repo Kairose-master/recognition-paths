@@ -60,7 +60,8 @@ modulo equal state profiles. Together with the state collapse this is the
 biextensional collapse of the observation Chu space, in which tests
 separate states and states separate tests.
 
-`RecognitionPaths/Graded.lean` grades the closure by the number of
+`RecognitionPaths/Graded.lean` (paper repository:
+[graded-recognition](https://github.com/Kairose-master/graded-recognition)) grades the closure by the number of
 forward-chaining rounds: an ℕ-graded monad on atom sets whose limit is the
 closure operator (soundness and completeness), a budget-`k` behavioral
 identity, and the theorem that an extension is visible at budget `k`
