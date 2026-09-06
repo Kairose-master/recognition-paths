@@ -287,6 +287,23 @@ duality; the Boolean readout of Phase 3.2 removes that layer and keeps only
 the duality, which is why the Recognition Factorization Theorem can be
 checked there by exact equality.
 
+## 5e. Specifications for constructed recognizers
+
+`RecognitionPaths/Specification.lean` states what a recognizer built to
+satisfy the theory must look like. A *theory-factoring* recognizer
+\(\rho(w,q)=f(\Gamma(w),q)\) reads a trace only through its set of clauses;
+it is invariant under permutation and repetition of any block in any
+context by construction (`theoryRecognizer_contextEquiv_of_perm`,
+`theoryRecognizer_contextEquiv_dup`), but nothing forces it to identify
+two clause sets with the same consequences. The *ideal* recognizer
+\(\rho(w,q)=\operatorname{Entails}(\Gamma(w),q)\) is logically invariant and
+logically recoverable, so \(L\simeq B\) (`idealRecognizer_equiv`).
+
+A model whose premise encoder is a set encoder realises the first
+specification exactly. The distance between the two specifications, the
+identification of consequence-equivalent clause sets, is what training
+must supply, and it is measured on the same tables as before.
+
 ## 6. From exact equality to distance (not formalized)
 
 Real logits are never exactly equal, so the practical object is the

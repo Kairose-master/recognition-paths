@@ -7,3 +7,4 @@ import RecognitionPaths.Recognition
 import RecognitionPaths.Nerode
 import RecognitionPaths.Identification
 import RecognitionPaths.Biextensional
+import RecognitionPaths.Specification
