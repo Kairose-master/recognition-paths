@@ -338,6 +338,16 @@ recognizer (`entailsK_presaturate`) says that pre-saturating the
 hypotheses by \(j\) rounds and reading with budget \(k\) equals reading
 with budget \(j+k\): a hint buys exactly its depth.
 
+**Lax graded readers.** A learned budgeted reasoner need not compute
+\(T_k\) exactly. `LaxGraded Γ s` packages a family of monotone operators
+\(R_k\) with \(T_{k-s}S\subseteq R_kS\subseteq T_kS\). Slack \(0\) forces
+\(R_k=T_k\) (`eq_rounds_of_slack_zero`); zero budget is the identity for
+any slack (`zero_eq_id`); and composition inherits the sandwich with the
+slack added: \(T_{j+k-2s}\subseteq R_j\circ R_k\subseteq T_{j+k}\)
+(`comp_lower`, `comp_upper`, `comp_sandwich`). The reader found in RQ2c
+has slack \(1\) on budgets \(k\ge1\); whether its self-composition has
+slack \(2\), as the theorem allows, or less, is the RQ2g test.
+
 This is the first place the theory names an algebraic object that a
 constructed recognizer realises and that predicts, rather than describes,
 which equal-meaning inputs it distinguishes. The RQ2 table of

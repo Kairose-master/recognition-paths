@@ -309,6 +309,78 @@ theorem entailsK_presaturate (Γ : Theory Atom) (j k : Nat) (S : AtomSet Atom) (
     rounds Γ k (rounds Γ j S) g ↔ rounds Γ (j + k) S g := by
   rw [rounds_add, Nat.add_comm]
 
+
+/-! ### Lax graded readers
+
+A learned budgeted reasoner need not compute `T_k` exactly.  The RQ2c
+experiment found a learned reader sandwiched between two grades of the
+closure: `T_{k-1} S ⊆ R_k S ⊆ T_k S`.  We record the abstract structure
+and prove that its laws are inherited by composition with the slack
+adding up.  Slack `0` is the graded monad itself. -/
+
+/-- A family of monotone operators on atom sets indexed by a budget and
+    sandwiched by the graded closure with slack `s`. -/
+structure LaxGraded (Γ : Theory Atom) (s : Nat) where
+  R : Nat → AtomSet Atom → AtomSet Atom
+  mono : ∀ k {S S' : AtomSet Atom}, Sub S S' → Sub (R k S) (R k S')
+  lower : ∀ k S, Sub (rounds Γ (k - s) S) (R k S)
+  upper : ∀ k S, Sub (R k S) (rounds Γ k S)
+
+namespace LaxGraded
+
+variable {Γ : Theory Atom} {s : Nat}
+
+/-- The graded closure is lax graded with slack `0`. -/
+def ofRounds (Γ : Theory Atom) : LaxGraded Γ 0 where
+  R := rounds Γ
+  mono := fun k _ _ h => rounds_mono Γ k h
+  lower := fun k S => by simpa using Sub.refl (rounds Γ k S)
+  upper := fun k S => Sub.refl _
+
+/-- Slack `0` forces the reader to be the graded closure. -/
+theorem eq_rounds_of_slack_zero (L : LaxGraded Γ 0) (k : Nat) (S : AtomSet Atom) :
+    L.R k S = rounds Γ k S := by
+  funext a
+  apply propext
+  exact ⟨fun h => L.upper k S a h, fun h => L.lower k S a (by simpa using h)⟩
+
+/-- Zero budget is the identity, whatever the slack. -/
+theorem zero_eq_id (L : LaxGraded Γ s) (S : AtomSet Atom) : L.R 0 S = S := by
+  funext a
+  apply propext
+  exact ⟨fun h => L.upper 0 S a h, fun h => L.lower 0 S a (by simpa using h)⟩
+
+/-- **Upper composition law**: composing readers never exceeds the closure
+    at the summed budget. -/
+theorem comp_upper (L : LaxGraded Γ s) (j k : Nat) (S : AtomSet Atom) :
+    Sub (L.R j (L.R k S)) (rounds Γ (j + k) S) := by
+  have h₁ : Sub (L.R j (L.R k S)) (L.R j (rounds Γ k S)) := L.mono j (L.upper k S)
+  have h₂ : Sub (L.R j (rounds Γ k S)) (rounds Γ j (rounds Γ k S)) := L.upper j _
+  rw [rounds_add] at h₂
+  exact Sub.trans h₁ h₂
+
+/-- **Lower composition law**: composing two readers of slack `s` loses at
+    most `2s` rounds. -/
+theorem comp_lower (L : LaxGraded Γ s) (j k : Nat) (S : AtomSet Atom) :
+    Sub (rounds Γ ((j - s) + (k - s)) S) (L.R j (L.R k S)) := by
+  rw [← rounds_add]
+  have h₁ : Sub (rounds Γ (j - s) (rounds Γ (k - s) S)) (rounds Γ (j - s) (L.R k S)) :=
+    rounds_mono Γ (j - s) (L.lower k S)
+  exact Sub.trans h₁ (L.lower j _)
+
+/-- The composite of two readers of slack `s` is a reader of slack `2s`
+    at the summed budget, on budgets where the subtraction is honest. -/
+theorem comp_sandwich (L : LaxGraded Γ s) (j k : Nat) (S : AtomSet Atom)
+    (hj : s ≤ j) (hk : s ≤ k) :
+    Sub (rounds Γ (j + k - 2 * s) S) (L.R j (L.R k S)) ∧
+      Sub (L.R j (L.R k S)) (rounds Γ (j + k) S) := by
+  refine ⟨?_, comp_upper L j k S⟩
+  have : j + k - 2 * s = (j - s) + (k - s) := by omega
+  rw [this]
+  exact comp_lower L j k S
+
+end LaxGraded
+
 end Horn
 
 end RecognitionPaths
