@@ -60,6 +60,10 @@ modulo equal state profiles. Together with the state collapse this is the
 biextensional collapse of the observation Chu space, in which tests
 separate states and states separate tests.
 
+`RecognitionPaths/Closure.lean` is the closure monad on theories
+(extensive, monotone, idempotent) whose algebras are the closed theories;
+logical identity is equality of closures (`logicalEquiv_iff_cl_eq`).
+
 `RecognitionPaths/Graded.lean` (paper repository:
 [graded-recognition](https://github.com/Kairose-master/graded-recognition)) grades the closure by the number of
 forward-chaining rounds: an ℕ-graded monad on atom sets whose limit is the

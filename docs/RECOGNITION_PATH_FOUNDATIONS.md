@@ -405,6 +405,17 @@ yields the monad candidate \(T_\rho=U_\rho F_\rho\). The order is
 \text{operations and equations}\to\text{algebraic theory}\to\text{monad}.
 \]
 
+`RecognitionPaths/Closure.lean` names the monad behind \(\equiv_L\)
+directly: \(\mathrm{Cl}\,\Gamma\), the set of clauses derivable from
+\(\Gamma\), is extensive, monotone and idempotent on the poset of
+theories (`cl_extensive`, `cl_mono`, `cl_idem`, `cl_cl`), i.e. a monad on
+that poset; its algebras are the closed theories; and logical identity of
+traces is equality of closures (`logicalEquiv_iff_cl_eq`), so \(L\) *is*
+the set of algebras. The graded closure is its filtration
+(`mem_cl_iff_exists_rounds`). The lax graded readers of §5f are what a
+trained recognizer keeps of this monad: monotone operators with a lax
+multiplication and, empirically, no unit.
+
 Of the later steps, one is now taken: the graded closure of §5f is the
 monad candidate for budgeted recognizers, with its composition law as the
 first equation. Whether any recognizer that was not built from it

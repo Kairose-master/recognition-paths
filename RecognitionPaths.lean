@@ -9,3 +9,4 @@ import RecognitionPaths.Identification
 import RecognitionPaths.Biextensional
 import RecognitionPaths.Specification
 import RecognitionPaths.Graded
+import RecognitionPaths.Closure
