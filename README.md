@@ -2,6 +2,8 @@
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22495808.svg)](https://doi.org/10.5281/zenodo.22495808)
 
+Version 0.2.0 (graded closure, lax graded readers, closure monad): DOI 10.5281/zenodo.22636567. Paper: [graded-recognition](https://github.com/Kairose-master/graded-recognition), DOI 10.5281/zenodo.22578931.
+
 Recognition Paths studies when formal identity can be transported into the
 observational identity of a recognizer.
 
